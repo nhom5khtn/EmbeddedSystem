@@ -65,12 +65,10 @@ class MainActivity : AppCompatActivity() {
      * Calculates user location based on Weighted/Not Weighted K Nearest
      * Neighbor (KNN) Algorithm
      *
-     * @param proj
-     * the project details from db for current area
-     *
-     * @param observedRSSValues
-     * RSS values currently observed
-     * @param parameter
+     * @param curPos
+     * Position currently observed
+     * @param radioMap
+     * Radio Map to search RSSI mean value
      *
      * @param isWeighted
      * To be weighted or not
@@ -138,9 +136,9 @@ class MainActivity : AppCompatActivity() {
      * values and the RSS values for a specific location.
      *
      * @param rssiOnlineVector
-     * RSS values of a location in stored in AP obj of locations
-     * @param rssiOfflineVector
      * RSS values currently observed
+     * @param rssiOfflineVector
+     * RSS values of a location in stored in AP obj of locations
      *
      * @return The Euclidean distance, or MIN_VALUE for error
      */
@@ -175,10 +173,8 @@ class MainActivity : AppCompatActivity() {
      * Calculates the Average of the K locations that have the shortest
      * distances D
      *
-     * @param LocDistance_Results_List
+     * @param locDistanceResultsList
      * Locations-Distances pairs sorted by distance
-     * @param K
-     * The number of locations used
      * @return The estimated user location, or null for error
      */
     private fun calculateAverageKDistanceLocations(
@@ -214,10 +210,8 @@ class MainActivity : AppCompatActivity() {
      * Calculates the Weighted Average of the K locations that have the shortest
      * distances D
      *
-     * @param LocDistance_Results_List
+     * @param locDistanceResultsList
      * Locations-Distances pairs sorted by distance
-     * @param K
-     * The number of locations used
      * @return The estimated user location, or null for error
      */
     private fun calculateWeightedAverageKDistanceLocations(locDistanceResultsList: ArrayList<LocDistance>): String? {
