@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -20,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView
 import demo.embeddedsystem.R
 import demo.embeddedsystem.adapter.holder.AccessPointSection
 import demo.embeddedsystem.adapter.holder.ReferencePointSection
+import demo.embeddedsystem.model.AccessPoint
 import demo.embeddedsystem.model.IndoorProject
+import demo.embeddedsystem.model.ReferencePoint
 import demo.embeddedsystem.utils.RecyclerItemClickListener
 import io.realm.Realm
 
@@ -85,7 +88,7 @@ class ProjectDetailActivity : AppCompatActivity(), View.OnClickListener, Recycle
             supportActionBar!!.setTitle(name)
         }
         if (apCount > 0) {
-            (findViewById(R.id.tv_ap_count) as TextView).text = "Access Points:$apCount"
+            (findViewById<TextView>(R.id.tv_ap_count)).text = "Access Points:$apCount"
         }
         if (rpCount > 0) {
             (findViewById(R.id.tv_rp_count) as TextView).text = "Reference Points:$rpCount"
@@ -102,19 +105,11 @@ class ProjectDetailActivity : AppCompatActivity(), View.OnClickListener, Recycle
         if (view.id == btnAddAp!!.id) {
             startAddAPActivity("")
         } else if (view.id == btnAddRp!!.id) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) !== PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissions(
-                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                    PERM_REQ_CODE_RP_ACCESS_COARSE_LOCATION
-                )
-                //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-            } else {
-                startAddRPActivity(null)
-            }
+            requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                PERM_REQ_CODE_RP_ACCESS_COARSE_LOCATION
+            )
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         } else if (view.id == btnLocateMe!!.id) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
                     this,
@@ -178,6 +173,8 @@ class ProjectDetailActivity : AppCompatActivity(), View.OnClickListener, Recycle
             startAddRPActivity(referencePoint.getId())
         }
     }
+
+
 
     override fun onLongClick(view: View?, position: Int) {
 //        Toast.makeText(this,"onLongClick pos>"+position, Toast.LENGTH_SHORT).show();

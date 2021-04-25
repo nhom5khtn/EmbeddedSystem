@@ -46,11 +46,11 @@ class SearchWifiAccessPointActivity : AppCompatActivity(), View.OnClickListener,
             mainWifi!!.isWifiEnabled = true
         }
         layoutManager = LinearLayoutManager(this)
-        rvWifis.setLayoutManager(layoutManager)
-        rvWifis.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        rvWifis.setItemAnimator(DefaultItemAnimator())
-        rvWifis.setAdapter(wifiResultsAdapter)
-        rvWifis.addOnItemTouchListener(RecyclerItemClickListener(this@SearchWifiAccessPointActivity, rvWifis, this))
+        rvWifis?.setLayoutManager(layoutManager)
+        rvWifis?.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        rvWifis?.setItemAnimator(DefaultItemAnimator())
+        rvWifis?.setAdapter(wifiResultsAdapter)
+        rvWifis?.addOnItemTouchListener(RecyclerItemClickListener(this@SearchWifiAccessPointActivity, rvWifis, this))
     }
 
     fun refresh() {

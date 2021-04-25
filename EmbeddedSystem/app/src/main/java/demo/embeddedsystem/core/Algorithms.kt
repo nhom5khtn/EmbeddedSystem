@@ -7,11 +7,9 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.io.IOException
-import java.lang.Double.NaN
 import java.util.*
-import kotlin.Double.Companion.NaN
 
-object Algorithms {
+class Algorithms {
     const val K = "4"
 
     /**
@@ -27,7 +25,6 @@ object Algorithms {
      * @return the location of user
      */
     fun processingAlgorithms(latestScanList: List<WifiDataNetwork>, proj: IndoorProject, algorithm_choice: Int): LocationWithNearbyPlaces? {
-        var i: Int
         var j: Int
         val aps: RealmList<AccessPoint> = proj.getAps()
         val observedRSSValues = ArrayList<Float>()
@@ -37,7 +34,7 @@ object Algorithms {
 //		String NaNValue = readParameter(RM, 0);
 
         // Check which mac addresses of radio map, we are currently listening.
-        i = 0
+        var i: Int = 0
         while (i < aps.size) {
             j = 0
             while (j < latestScanList.size) {
@@ -51,7 +48,7 @@ object Algorithms {
             }
             // A MAC Address is missing so we place a small value, NaN value
             if (j == latestScanList.size) {
-                observedRSSValues.add(AppContants.NaN)
+                AppContants.NaN?.let { observedRSSValues.add(it) }
                 ++notFoundCounter
             }
             ++i
@@ -85,16 +82,12 @@ object Algorithms {
      *
      * @return The estimated user location
      */
-    private fun KNN_WKNN_Algorithm(
-        proj: IndoorProject, observedRSSValues: ArrayList<Float>,
-        parameter: String, isWeighted: Boolean
-    ): LocationWithNearbyPlaces? {
+    private fun KNN_WKNN_Algorithm(proj: IndoorProject, observedRSSValues: ArrayList<Float>, parameter: String, isWeighted: Boolean): LocationWithNearbyPlaces? {
         var rssValues: RealmList<AccessPoint>
-        var curResult = 0f
+        var curResult: Float?
         val locDistanceResultsList: ArrayList<LocDistance> = ArrayList<LocDistance>()
-        var myLocation: String? = null
-        val K: Int
-        K = try {
+        var myLocation: String?
+        val K: Int = try {
             parameter.toInt()
         } catch (e: Exception) {
             return null
@@ -106,10 +99,7 @@ object Algorithms {
             rssValues = referencePoint.getReadings()
             curResult = calculateEuclideanDistance(rssValues, observedRSSValues)
             if (curResult == Float.NEGATIVE_INFINITY) return null
-            locDistanceResultsList.add(
-                0,
-                LocDistance(curResult, referencePoint.getLocId(), referencePoint.getName())
-            )
+            locDistanceResultsList.add(0, LocDistance(curResult, referencePoint.getLocId(), referencePoint.getName()))
         }
 
         // Sort locations-distances pairs based on minimum distances
@@ -173,7 +163,7 @@ object Algorithms {
         }
         if (isWeighted) myLocation =
             calculateWeightedAverageProbabilityLocations(locDistanceResultsList)
-        return LocationWithNearbyPlaces(myLocation, locDistanceResultsList)
+        return myLocation?.let { LocationWithNearbyPlaces(it, locDistanceResultsList) }
     }
 
     /**
@@ -276,7 +266,7 @@ object Algorithms {
 
         // Calculate the sum of X and Y
         for (i in 0 until K_Min) {
-            LocationArray = LocDistance_Results_List[i].getLocation().split(" ")
+            LocationArray = LocDistance_Results_List[i].getLocation()?.split(" ")?.toTypedArray()!!
             try {
                 x = java.lang.Float.valueOf(LocationArray[0]!!.trim { it <= ' ' }).toFloat()
                 y = java.lang.Float.valueOf(LocationArray[1]!!.trim { it <= ' ' }).toFloat()
@@ -323,7 +313,7 @@ object Algorithms {
             } else {
                 LocationWeight = 100.0
             }
-            LocationArray = LocDistance_Results_List[i].getLocation().split(" ")
+            LocationArray = LocDistance_Results_List[i].getLocation()?.split(" ")?.toTypedArray()!!
             try {
                 x = java.lang.Float.valueOf(LocationArray[0]!!.trim { it <= ' ' }).toFloat()
                 y = java.lang.Float.valueOf(LocationArray[1]!!.trim { it <= ' ' }).toFloat()
@@ -362,7 +352,7 @@ object Algorithms {
 
         // Calculate the weighted (Normalized Probabilities) sum of X and Y
         for (i in LocDistance_Results_List.indices) {
-            LocationArray = LocDistance_Results_List[i].getLocation().split(" ")
+            LocationArray = LocDistance_Results_List[i].getLocation()?.split(" ")?.toTypedArray()!!
             try {
                 x = java.lang.Float.valueOf(LocationArray[0]!!.trim { it <= ' ' }).toFloat()
                 y = java.lang.Float.valueOf(LocationArray[1]!!.trim { it <= ' ' }).toFloat()

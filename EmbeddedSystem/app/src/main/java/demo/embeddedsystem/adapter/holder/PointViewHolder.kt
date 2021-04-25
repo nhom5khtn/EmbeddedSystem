@@ -6,15 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import demo.embeddedsystem.R
 
 class PointViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val tvIdentifier: TextView
-    val tvIdentifier2: TextView
-    val tvPointX: TextView
-    val tvPointY: TextView
+    val tvIdentifier: TextView = itemView.findViewById(R.id.point_identifier)
+    val tvIdentifier2: TextView = itemView.findViewById(R.id.point_identifier2)
+    val tvPointX: TextView = itemView.findViewById(R.id.point_x)
+    val tvPointY: TextView = itemView.findViewById(R.id.point_y)
 
-    init {
-        tvIdentifier = itemView.findViewById(R.id.point_identifier)
-        tvIdentifier2 = itemView.findViewById(R.id.point_identifier2)
-        tvPointX = itemView.findViewById(R.id.point_x)
-        tvPointY = itemView.findViewById(R.id.point_y)
-    }
 }

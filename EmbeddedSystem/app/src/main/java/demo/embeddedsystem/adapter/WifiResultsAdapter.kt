@@ -28,19 +28,18 @@ class WifiResultsAdapter : RecyclerView.Adapter<WifiResultsAdapter.ViewHolder?>(
     }
 
     override fun getItemCount(): Int {
-        return results.field
+        return results.size
     }
 
     class ViewHolder(v: LinearLayout) : RecyclerView.ViewHolder(v) {
         // each data item is just a string in this case
-        var bssid: TextView
+        var bssid: TextView = v.findViewById(R.id.wifi_bssid)
         var ssid: TextView
         var capabilities: TextView
         var level: TextView
         var frequency: TextView
 
         init {
-            bssid = v.findViewById(R.id.wifi_bssid)
             ssid = v.findViewById(R.id.wifi_ssid)
             capabilities = v.findViewById(R.id.wifi_capabilities)
             frequency = v.findViewById(R.id.wifi_frequency)

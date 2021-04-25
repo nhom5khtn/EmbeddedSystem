@@ -35,7 +35,6 @@
 */
 package demo.embeddedsystem.model
 
-import androidx.annotation.NonNull
 import java.sql.Types.NULL
 
 

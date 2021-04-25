@@ -8,8 +8,9 @@ import java.util.*
 class ReferencePointSection(sectionParameters: SectionParameters?) :
     StatelessSection(sectionParameters) {
     private var referencePoints: List<ReferencePoint> = ArrayList<ReferencePoint>()
+
     fun getContentItemsTotal(): Int {
-        return referencePoints.field
+        return referencePoints.size
     }
 
     fun getItemViewHolder(view: View?): RecyclerView.ViewHolder {
@@ -30,8 +31,8 @@ class ReferencePointSection(sectionParameters: SectionParameters?) :
         headerViewHolder.tvTitle.setText("Reference Points")
     }
 
-    fun getHeaderViewHolder(view: View?): RecyclerView.ViewHolder {
-        return SectionHeaderViewHolder(view)
+    fun getHeaderViewHolder(view: View?): SectionHeaderViewHolder? {
+        return view?.let { SectionHeaderViewHolder(it) }
     }
 
     fun getReferencePoints(): List<ReferencePoint> {

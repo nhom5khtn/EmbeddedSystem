@@ -11,7 +11,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Handler().postDelayed({
-            // start onboard one activity
             startActivity(Intent(this@MainActivity, HomeActivity::class.java))
             finish()
         }, 5000)

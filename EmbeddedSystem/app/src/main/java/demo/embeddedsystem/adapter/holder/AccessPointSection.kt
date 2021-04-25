@@ -8,12 +8,13 @@ import java.util.*
 class AccessPointSection(sectionParameters: SectionParameters?) :
     StatelessSection(sectionParameters) {
     private var accessPoints: List<AccessPoint> = ArrayList<AccessPoint>()
+
     fun getContentItemsTotal(): Int {
-        return accessPoints.field
+        return accessPoints.size
     }
 
-    fun getItemViewHolder(view: View?): RecyclerView.ViewHolder {
-        return PointViewHolder(view)
+    fun getItemViewHolder(view: View?): PointViewHolder? {
+        return view?.let { PointViewHolder(it) }
     }
 
     fun onBindItemViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -39,7 +40,7 @@ class AccessPointSection(sectionParameters: SectionParameters?) :
         headerViewHolder.tvTitle.setText("Access Points")
     }
 
-    fun getHeaderViewHolder(view: View?): RecyclerView.ViewHolder {
-        return SectionHeaderViewHolder(view)
+    fun getHeaderViewHolder(view: View?): SectionHeaderViewHolder? {
+        return view?.let { SectionHeaderViewHolder(it) }
     }
 }

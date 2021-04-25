@@ -20,21 +20,19 @@ class WifiService : Service() {
     private var mScheduler: ScheduledExecutorService? = null
     private var mWifiData: WifiData? = null
     private val initialDelay: Long = 0
-    private val periodReader: Long = AppContants.FETCH_INTERVAL
+    private val periodReader: Long = AppContants.FETCH_INTERVAL?.toLong() ?:
 
     /**
      * It creates a new Thread that it is executed periodically reading the last
      * scanning of WiFi networks (if WiFi is available).
      */
+
     override fun onCreate() {
         Log.d(TAG, "WifiService onCreate")
         mWifiData = WifiData()
         mWifiManager = this.getSystemService(WIFI_SERVICE) as WifiManager
         mScheduler = Executors.newScheduledThreadPool(1)
-        scheduleReaderHandle = mScheduler.scheduleAtFixedRate(
-            ScheduleReader(), initialDelay, periodReader,
-            TimeUnit.MILLISECONDS
-        )
+        scheduleReaderHandle = mScheduler.scheduleAtFixedRate(ScheduleReader(), initialDelay, periodReader, TimeUnit.MILLISECONDS)
     }
 
     /**

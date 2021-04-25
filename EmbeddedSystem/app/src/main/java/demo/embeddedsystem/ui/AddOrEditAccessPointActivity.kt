@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import demo.embeddedsystem.R
 import io.realm.Realm
 import java.util.*
@@ -88,13 +89,13 @@ class AddOrEditAccessPointActivity : AppCompatActivity(), View.OnClickListener {
             val mac = etMAC!!.text.toString().trim { it <= ' ' }
             val isEditMode = isEdit
             if (text.isEmpty()) {
-                Snackbar.make(addAp, "Provide Access Point Name", Snackbar.LENGTH_LONG)
+                Snackbar.make(addAp!!, "Provide Access Point Name", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             } else {
                 // Obtain a Realm instance
                 val realm = Realm.getDefaultInstance()
                 realm.beginTransaction()
-                val project: IndoorProject =
+                val project: IndoorProject? =
                     realm.where(IndoorProject::class.java).equalTo("id", projectId).findFirst()
                 if (isEditMode) {
                     apToBeEdited.setSsid(text)
@@ -118,18 +119,11 @@ class AddOrEditAccessPointActivity : AppCompatActivity(), View.OnClickListener {
                 finish()
             }
         } else if (view.id == btnScanAP!!.id) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) !== PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(
-                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                    PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION
-                )
-                //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-            } else {
-                startSearchWifiActivity()
-            }
+            requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION
+            )
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         }
     }
 

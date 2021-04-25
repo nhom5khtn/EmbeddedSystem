@@ -24,7 +24,15 @@ import io.realm.RealmList
 import java.lang.Double
 import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import demo.embeddedsystem.R
+import demo.embeddedsystem.adapter.ReferenceReadingsAdapter
+import demo.embeddedsystem.model.AccessPoint
+import demo.embeddedsystem.model.IndoorProject
+import demo.embeddedsystem.model.ReferencePoint
+import demo.embeddedsystem.utils.AppContants
 import io.realm.Realm
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class AddOrEditReferencePointActivity : AppCompatActivity(), View.OnClickListener {
@@ -90,7 +98,7 @@ class AddOrEditReferencePointActivity : AppCompatActivity(), View.OnClickListene
             mainWifi = applicationContext.getSystemService<Any>(Context.WIFI_SERVICE) as WifiManager
             receiverWifi = AvailableAPsReceiver()
             wifiWasEnabled = mainWifi!!.isWifiEnabled()
-            val project: IndoorProject =
+            val project: IndoorProject? =
                 realm.where(IndoorProject::class.java).equalTo("id", projectId).findFirst()
             val points: RealmList<AccessPoint> = project.getAps()
             for (accessPoint in points) {
@@ -130,7 +138,7 @@ class AddOrEditReferencePointActivity : AppCompatActivity(), View.OnClickListene
     fun refresh() {
         handler.postDelayed({
             mainWifi!!.startScan()
-            if (readingsCount < AppContants.READINGS_BATCH) {
+            if (readingsCount < AppContants.READINGS_BATCH!!) {
                 refresh()
             } else {
                 caliberationCompleted()
@@ -147,11 +155,11 @@ class AddOrEditReferencePointActivity : AppCompatActivity(), View.OnClickListene
             val mean = calculateMeanValue(readingsOfAMac)
             Log.v(TAG, "entry.Key:$key aps:$aps")
             val accessPoint: AccessPoint? = aps[key]
-            val updatedPoint = AccessPoint(accessPoint)
+            val updatedPoint = accessPoint?.let { AccessPoint(it) }
             updatedPoint.setMeanRss(mean)
             apsWithReading.add(updatedPoint)
         }
-        readingsAdapter.setReadings(apsWithReading)
+        readingsAdapter.setReadings(apsWithReading as MutableList<AccessPoint>)
         readingsAdapter.notifyDataSetChanged()
         bnRpSave!!.isEnabled = true
         bnRpSave!!.text = "Save"
@@ -163,7 +171,7 @@ class AddOrEditReferencePointActivity : AppCompatActivity(), View.OnClickListene
         }
         var sum = 0
         for (integer in readings) {
-            sum = sum + integer
+            sum += integer
         }
         return Double.valueOf(sum.toDouble()) / Double.valueOf(readings.size.toDouble())
     }
@@ -205,7 +213,7 @@ class AddOrEditReferencePointActivity : AppCompatActivity(), View.OnClickListene
                 referencePoint.getReadings().addAll(apsWithReading)
             }
             referencePoint.setId(UUID.randomUUID().toString())
-            val project: IndoorProject =
+            val project: IndoorProject? =
                 realm.where(IndoorProject::class.java).equalTo("id", projectId).findFirst()
             if (project.getRps() == null) {
                 val points: RealmList<ReferencePoint> = RealmList<ReferencePoint>()
@@ -220,7 +228,7 @@ class AddOrEditReferencePointActivity : AppCompatActivity(), View.OnClickListene
         } else if (view.id == bnRpSave!!.id && isEdit) {
             val realm: Realm = Realm.getDefaultInstance()
             realm.beginTransaction()
-            referencePointFromDB = setValues(referencePointFromDB)
+            referencePointFromDB = referencePointFromDB?.let { setValues(it) }
             realm.commitTransaction()
             Toast.makeText(this, "Reference Point Updated", Toast.LENGTH_SHORT).show()
             finish()
@@ -263,10 +271,7 @@ class AddOrEditReferencePointActivity : AppCompatActivity(), View.OnClickListene
                 }
             }
             //            results.put(Calendar.getInstance(), map);
-            Log.v(
-                TAG,
-                "Count:" + readingsCount + " scanResult:" + scanResults.toString() + " aps:" + aps.toString()
-            )
+            Log.v(TAG, "Count:" + readingsCount + " scanResult:" + scanResults.toString() + " aps:" + aps.toString())
             for (i in 0 until readingsCount) {
 //                Log.v(TAG, "  BSSID       =" + results.get(i).BSSID);
 //                Log.v(TAG, "  SSID        =" + results.get(i).SSID);

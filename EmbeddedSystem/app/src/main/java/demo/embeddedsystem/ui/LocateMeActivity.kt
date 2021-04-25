@@ -30,7 +30,7 @@ import io.realm.Realm
 
 class LocateMeActivity : AppCompatActivity() {
     private var mWifiData: WifiData? = null
-    private val algorithms: Algorithms = Algorithms
+    private val algorithms: Algorithms = Algorithms()
     private var projectId: String? = null
     private var defaultAlgo: String? = null
     private var project: IndoorProject? = null
@@ -91,12 +91,7 @@ class LocateMeActivity : AppCompatActivity() {
             Log.v("LocateMeActivity", "MainActivityReceiver")
             mWifiData = intent.getParcelableExtra<Parcelable>(AppContants.WIFI_DATA) as WifiData?
             if (mWifiData != null) {
-                val loc: LocationWithNearbyPlaces? = project?.let {
-                    Algorithms.processingAlgorithms(
-                        mWifiData.getNetworks(),
-                        it,
-                        defaultAlgo!!.toInt()
-                    )
+                val loc: LocationWithNearbyPlaces? = project?.let { Algorithms.processingAlgorithms(mWifiData.getNetworks(), it, defaultAlgo!!.toInt())
                 }
                 Log.v("LocateMeActivity", "loc:$loc")
                 if (loc == null) {

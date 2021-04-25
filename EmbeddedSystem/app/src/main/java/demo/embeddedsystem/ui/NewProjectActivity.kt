@@ -31,8 +31,7 @@ class NewProjectActivity : AppCompatActivity() , View.OnClickListener{
             val text = etProjectName!!.text.toString().trim { it <= ' ' }
             val desc: String = etProjectDesc.getText().toString().trim { it <= ' ' }
             if (text.isEmpty()) {
-                Snackbar.make(btCreate, "Provide Project Name", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+                Snackbar.make(btCreate!!, "Provide Project Name", Snackbar.LENGTH_LONG).setAction("Action", null).show()
             } else {
                 val indoorProject = IndoorProject(Date(), text, desc)
                 // Obtain a Realm instance

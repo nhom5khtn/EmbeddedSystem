@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import demo.embeddedsystem.adapter.ProjectsListAdapter
 import demo.embeddedsystem.model.IndoorProject
 import demo.embeddedsystem.utils.RecyclerItemClickListener
 import io.realm.Realm
@@ -44,13 +45,13 @@ class HomeActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
         // specify an adapter
-        mAdapter = ProjectsListAdapter(projects)
+        mAdapter = ProjectsListAdapter(projects as RealmResults<IndoorProject>)
         mRecyclerView!!.adapter = mAdapter
     }
 
     override fun onResume() {
         super.onResume()
-        mAdapter.notifyDataSetChanged()
+        mAdapter?.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

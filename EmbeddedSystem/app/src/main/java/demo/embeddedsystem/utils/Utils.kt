@@ -9,6 +9,7 @@ import demo.embeddedsystem.model.LocationWithNearbyPlaces
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.sqrt
 
 class Utils {
     fun getDefaultAlgo(context: Context?): String? {
@@ -33,13 +34,13 @@ class Utils {
     fun getTheNearestPoint(loc: LocationWithNearbyPlaces): LocDistance? {
         val places: ArrayList<LocDistance> = loc.getPlaces()
         if (places.size > 0) {
-            Collections.sort(places)
+            places.sort()
             return places[0]
         }
         return null
     }
 
-    fun reduceDecimalPlaces(location: String): String? {
+    fun reduceDecimalPlaces(location: String): String {
         val formatter: NumberFormat = DecimalFormat("#0.00")
         val split = location.split(" ").toTypedArray()
         val latValue = java.lang.Double.valueOf(split[0])
@@ -54,7 +55,7 @@ class Utils {
         val split = location.split(" ").toTypedArray()
         val latValue = java.lang.Double.valueOf(split[0])
         val lonValue = java.lang.Double.valueOf(split[1])
-        val distance = Math.sqrt(latValue * latValue + lonValue * lonValue)
+        val distance = sqrt(latValue * latValue + lonValue * lonValue)
         return formatter.format(distance)
     }
 }
