@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import embeddedsystem.testalgorithms.databinding.ActivityMainBinding
-import java.lang.Exception
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,9 +15,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ReferencePointAdapter
     val radioMap = mutableListOf<ReferencePoint>()
-    val currPoint = AccessPoint(null,-27.0F,-35.0F,-31.0F)
-    private val K = 4
-
+    private val K = 16
+    val curPoint = AccessPoint(null, -37F, -54F, -49F)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -26,12 +24,12 @@ class MainActivity : AppCompatActivity() {
         csvReader().open(resources.openRawResource(R.raw.radiomap)) {
             readAllWithHeaderAsSequence().forEach { row: Map<String, String> ->
                 radioMap.add(
-                    ReferencePoint(
-                    row.get("RefferencePoint").toString(),
-                    row.get("AP1")?.toFloat(),
-                    row.get("AP2")?.toFloat(),
-                    row.get("AP3")?.toFloat()
-                )
+                        ReferencePoint(
+                                row.get("RefferencePoint").toString(),
+                                row.get("AP1")?.toFloat(),
+                                row.get("AP2")?.toFloat(),
+                                row.get("AP3")?.toFloat()
+                        )
                 )
                 Log.e("read csv", radioMap.toString())
             }
@@ -43,9 +41,14 @@ class MainActivity : AppCompatActivity() {
                 Log.e("RP", referencePoint.referencePoint)
             }
         }
-        binding.tvCurPos.text = currPoint.toString()
+        binding.tvCurPos.text = curPoint.toString()
         binding.btnGetResult.setOnClickListener {
-            binding.tvResult.text = KNN_WKNN_Algorithm(currPoint, radioMap)
+            val result = KNN_WKNN_Algorithm(curPoint, radioMap, true)
+            ("Weighted: $result").also { binding.tvResult.text = it }
+        }
+        binding.btnGetResultNoWeighted.setOnClickListener {
+            val result = KNN_WKNN_Algorithm(curPoint, radioMap, false)
+            ("No Weighted: $result").also { binding.tvResultNoWeighted.text = it }
         }
         adapter.submitList(radioMap)
     }
@@ -75,13 +78,14 @@ class MainActivity : AppCompatActivity() {
      * @return The estimated user location
      */
     private fun KNN_WKNN_Algorithm(
-        curPos: AccessPoint,
-        radioMap: List<ReferencePoint>
+            curPos: AccessPoint,
+            radioMap: List<ReferencePoint>,
+            isWeighted: Boolean
     ): String? {
         var rssiOnline = arrayOf(
-            curPos.rssiCurrValueAP1,
-            curPos.rssiCurrValueAP2,
-            curPos.rssiCurrValueAP3
+                curPos.rssiCurrValueAP1,
+                curPos.rssiCurrValueAP2,
+                curPos.rssiCurrValueAP3
         )
         var distanceEclide: Float
         val locDistanceResultsList: ArrayList<LocDistance> = ArrayList<LocDistance>()
@@ -91,28 +95,27 @@ class MainActivity : AppCompatActivity() {
         // observed RSS values
         for (referencePoint in radioMap) {
             var rssiOffline = arrayOf(
-                referencePoint.rssiMeanValueAP1,
-                referencePoint.rssiMeanValueAP2,
-                referencePoint.rssiMeanValueAP3
+                    referencePoint.rssiMeanValueAP1,
+                    referencePoint.rssiMeanValueAP2,
+                    referencePoint.rssiMeanValueAP3
             )
             Log.e(
-                "KNN- Calculate D[j=${referencePoint.referencePoint}]",
-                "\nrssiOnline{${rssiOnline[0]},${rssiOnline[1]},${rssiOnline[2]}} " +
-                        "+ rssiOffline{${rssiOffline[0]},${rssiOffline[1]},${rssiOffline[2]}}")
+                    "KNN- Calculate D[j=${referencePoint.referencePoint}]",
+                    "\nrssiOnline{${rssiOnline[0]},${rssiOnline[1]},${rssiOnline[2]}} " +
+                            "+ rssiOffline{${rssiOffline[0]},${rssiOffline[1]},${rssiOffline[2]}}")
             distanceEclide = calculateEuclideanDistance(rssiOnline, rssiOffline)
             Log.e("KNN- Calculate D[j=${referencePoint.referencePoint}] = ", distanceEclide.toString())
             if (distanceEclide == Float.NEGATIVE_INFINITY) return null
             locDistanceResultsList.add(
-                0,
-                LocDistance(distanceEclide, referencePoint.referencePoint)
+                    0,
+                    LocDistance(distanceEclide, referencePoint.referencePoint)
             )
         }
         var msg1 = "\nlist Dj"
         for(loc in locDistanceResultsList){
             msg1 += "\n{${loc.location},${loc.distance}}"
         }
-        Log.e("KNN- List Dj", msg1
-        )
+        Log.e("KNN- List Dj", msg1)
 
         // Sort locations-distances pairs based on minimum distances
         locDistanceResultsList.sortWith { gd1, gd2 -> if (gd1.distance > gd2.distance) 1 else if (gd1.distance === gd2.distance) 0 else -1 }
@@ -122,7 +125,11 @@ class MainActivity : AppCompatActivity() {
         }
         Log.e("KNN- Sorted List Dj", msg2)
 
-        myLocation = calculateAverageKDistanceLocations(locDistanceResultsList)
+        if (!isWeighted) {
+            myLocation = calculateAverageKDistanceLocations(locDistanceResultsList);
+        } else {
+            myLocation = calculateWeightedAverageKDistanceLocations(locDistanceResultsList);
+        }
         return myLocation
     }
 
@@ -138,8 +145,8 @@ class MainActivity : AppCompatActivity() {
      * @return The Euclidean distance, or MIN_VALUE for error
      */
     private fun calculateEuclideanDistance(
-        rssiOnlineVector: Array<Float>,
-        rssiOfflineVector: Array<Float?>
+            rssiOnlineVector: Array<Float>,
+            rssiOfflineVector: Array<Float?>
     ): Float {
         var finalResult = 0f
         var v1: Float
@@ -175,32 +182,69 @@ class MainActivity : AppCompatActivity() {
      * @return The estimated user location, or null for error
      */
     private fun calculateAverageKDistanceLocations(
-        LocDistance_Results_List: ArrayList<LocDistance>
+            locDistanceResultsList: ArrayList<LocDistance>
     ): String? {
         var sumX = 0.0f
         var sumY = 0.0f
-        var LocationArray: List<String?>
         var x: Float
         var y: Float
-        val K_Min = if (K < LocDistance_Results_List.size) K else LocDistance_Results_List.size
+        var location: String
+        val K_Min = if (K < locDistanceResultsList.size) K else locDistanceResultsList.size
 
         // Calculate the sum of X and Y
-        for (i in 0 until K_Min) {
-            LocationArray = LocDistance_Results_List[i].location.split(" ")
-            try {
-                x = java.lang.Float.valueOf(LocationArray[0].trim { it <= ' ' }).toFloat()
-                y = java.lang.Float.valueOf(LocationArray[1].trim { it <= ' ' }).toFloat()
-            } catch (e: Exception) {
-                return null
-            }
+        for (z in 0 until K_Min) {
+            location = locDistanceResultsList[z].location
+            x = location.substring(location.indexOf('[') + 1, location.indexOf('.')).toFloat()
+            y = location.substring(location.indexOf('.') + 1, location.indexOf(']')).toFloat()
             sumX += x
             sumY += y
+            Log.e("KNN- Calculate the sum of X and Y: z = $z", "pos[$x,$y]")
+            Log.e("KNN- Calculate the sum of X and Y: z = $z", "pos[$x,$y]")
         }
 
         // Calculate the average
         sumX /= K_Min.toFloat()
         sumY /= K_Min.toFloat()
-        return "$sumX $sumY"
+        Log.e("KNN- Calculate the average", "pos[$sumX,$sumY]")
+        return sumX.toString().substring(0, sumX.toString().indexOf('.')+3) +
+        " " + sumY.toString().substring(0, sumY.toString().indexOf('.')+3)
     }
 
+    /**
+     * Calculates the Weighted Average of the K locations that have the shortest
+     * distances D
+     *
+     * @param LocDistance_Results_List
+     * Locations-Distances pairs sorted by distance
+     * @param K
+     * The number of locations used
+     * @return The estimated user location, or null for error
+     */
+    private fun calculateWeightedAverageKDistanceLocations(locDistanceResultsList: ArrayList<LocDistance>): String? {
+        var LocationWeight: Double
+        var sumWeights = 0.0
+        var WeightedSumX = 0.0
+        var WeightedSumY = 0.0
+        var x: Float
+        var y: Float
+        var location: String
+        val K_Min = if (K < locDistanceResultsList.size) K else locDistanceResultsList.size
+
+        // Calculate the weighted sum of X and Y
+        for (z in 0 until K_Min) {
+            LocationWeight = (1 / locDistanceResultsList[z].distance).toDouble()
+            location = locDistanceResultsList[z].location
+            x = location.substring(location.indexOf('[') + 1, location.indexOf('.')).toFloat()
+            y = location.substring(location.indexOf('.') + 1, location.indexOf(']')).toFloat()
+            sumWeights += LocationWeight
+            WeightedSumX += LocationWeight * x
+            WeightedSumY += LocationWeight * y
+            Log.e("KNN- Calculate the weighted sum of X and Y: z = $z", "pos[$x,$y]")
+        }
+        WeightedSumX /= sumWeights
+        WeightedSumY /= sumWeights
+        Log.e("KNN- Calculate the average", "pos[$WeightedSumX,$WeightedSumY]")
+        return WeightedSumX.toString().substring(0, WeightedSumX.toString().indexOf('.')+3) +
+                " " + WeightedSumY.toString().substring(0, WeightedSumY.toString().indexOf('.')+3)
+    }
 }
