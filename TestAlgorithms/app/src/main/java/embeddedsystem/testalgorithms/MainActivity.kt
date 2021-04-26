@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ReferencePointAdapter
     val radioMap = mutableListOf<ReferencePoint>()
-    val curPoint = AccessPoint(null, -37F,-41F,-36F)
+    val curPoint = AccessPoint(null, -52F,-37F,-23F)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
