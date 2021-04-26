@@ -45,7 +45,7 @@ class ReferencePointAdapter  : ListAdapter<ReferencePoint, ReferencePointAdapter
         companion object {
             fun from(parent: ViewGroup) : ViewHolder {
                 var layoutInflater = LayoutInflater.from(parent.context)
-                var view = layoutInflater.inflate(R.layout.student_item_view, parent, false)
+                var view = layoutInflater.inflate(R.layout.refpos_item_view, parent, false)
                 return ViewHolder(view)
             }
         }
