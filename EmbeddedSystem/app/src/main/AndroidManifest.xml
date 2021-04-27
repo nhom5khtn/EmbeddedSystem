@@ -9,16 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EmbeddedSystem">
-        <activity android:name=".adapter.WifiResultsAdapter"></activity>
-        <activity android:name=".adapter.ProjectsListAdapter" />
-        <activity android:name=".ui.SearchWifiAccessPointActivity" />
         <activity android:name=".ui.ProjectDetailActivity" />
-        <activity android:name=".ui.NewProjectActivity" />
-        <activity android:name=".ui.AddOrEditReferencePointActivity" />
-        <activity android:name=".ui.AddOrEditAccessPointActivity" />
-        <activity android:name=".ui.LocateMeActivity" />
-        <activity android:name=".ui.HomeActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'realm-android'
-    id 'kotlin-parcelize'
-    id 'com.google.gms.google-services'  // Google Services plugin
+    //id 'kotlin-parcelize'
+    //id 'com.google.gms.google-services'  // Google Services plugin
 }
 
 android {
@@ -38,11 +39,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+
 }
 
-realm {
-    syncEnabled = true
-}
+
 
 dependencies {
 
@@ -56,17 +57,12 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-// Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:27.1.0')
 
-    // When using the BoM, you don't specify versions in Firebase library dependencies
 
-    // Declare the dependency for the Firebase SDK for Google Analytics
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    //csv
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
 
-    // Declare the dependencies for any other desired Firebase products
-    // For example, declare the dependencies for Firebase Authentication and Cloud Firestore
-    implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
 }

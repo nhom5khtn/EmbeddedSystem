@@ -1,66 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <LinearLayout
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@drawable/bg"
+        tools:context=".MainActivity">
 
-        <Button
-            android:id="@+id/btn_add_ap"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Add Access Point" />
-
-        <Button
-            android:id="@+id/btn_add_rp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Add Reference Point" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tv_ap_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="Access Point:0" />
+            android:id="@+id/textView"
+            android:layout_width="110dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="64dp"
+            android:text="KNN-Algorithms Weighted"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/layoutCurPos"
+            app:layout_constraintHorizontal_bias="0.053"
+            app:layout_constraintStart_toStartOf="@+id/layoutCurPos"
+            app:layout_constraintTop_toBottomOf="@+id/layoutCurPos" />
 
         <TextView
-            android:id="@+id/tv_rp_count"
-            android:layout_width="0dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="Reference Point:0" />
+            android:layout_marginTop="48dp"
+            android:text="KNN-Algorithms NoWeighted"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/textView"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="408dp"
+            android:layout_height="21dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.464">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_points"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1" />
+            <TextView
+                android:id="@+id/tvReferencePointDescription"
+                android:layout_width="100dp"
+                android:layout_height="18dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="Reference Point"
+                android:textColor="@color/white"
+                android:textAlignment="center" />
 
-    <Button
-        android:id="@+id/btn_locate_me"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Locate Me" />
+            <TextView
+                android:id="@+id/tvRSSIAP1Description"
+                android:layout_width="75dp"
+                android:layout_height="18dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="RSSI1"
+                android:textColor="@color/white"
+                android:textAlignment="center" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/tvRSSIAP2Description"
+                android:layout_width="75dp"
+                android:layout_height="18dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="RSSI2"
+                android:textColor="@color/white"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/tvRSSIAP3Description"
+                android:layout_width="75dp"
+                android:layout_height="18dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="RSSI3"
+                android:textColor="@color/white"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutCurPos"
+            android:layout_width="411dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:background="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/btnGetResult"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:id="@+id/tvCurPos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginTop="8dp">
+
+            </TextView>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnGetResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="144dp"
+            android:text="Result1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@+id/layoutCurPos"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="TextView"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/layoutCurPos"
+            app:layout_constraintHorizontal_bias="0.915"
+            app:layout_constraintStart_toStartOf="@+id/layoutCurPos"
+            app:layout_constraintTop_toBottomOf="@+id/layoutCurPos" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcList"
+            android:layout_width="match_parent"
+            android:layout_height="370dp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <Button
+            android:id="@+id/btnGetResultNoWeighted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="Result2"
+            app:layout_constraintEnd_toEndOf="@+id/btnGetResult"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/btnGetResult"
+            app:layout_constraintTop_toBottomOf="@+id/btnGetResult" />
+
+        <TextView
+            android:id="@+id/tvResultNoWeighted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:text="TextView"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/tvResult"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/tvResult"
+            app:layout_constraintTop_toBottomOf="@+id/tvResult" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
