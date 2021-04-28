@@ -9,7 +9,7 @@ String ssid2, rssi2;
 String ssid3, rssi3;
 
 // Unique IFTTT URL resource
-const char* pos11 = "/trigger/pos_1_1/with/key/obQtk9UMGrVVeyhHcwb9XM1D7a810z4hXE2EIsvdWTA";
+const char* pos11 = "/trigger/pos_1_1/with/key/pZZm1s7SDGnMJma8q4oUWoPyjqFHiN8EOhi7qwANgK2";
 const char* pos12 = "/trigger/pos_1_2/with/key/obQtk9UMGrVVeyhHcwb9XM1D7a810z4hXE2EIsvdWTA";
 const char* pos13 = "/trigger/pos_1_3/with/key/obQtk9UMGrVVeyhHcwb9XM1D7a810z4hXE2EIsvdWTA";
 const char* pos14 = "/trigger/pos_1_4/with/key/dTjiIgbf5Gw6CXkT8hgYC1pUO11XfPv1PeF9UWm4eSq";
@@ -121,13 +121,15 @@ void Scanning(){
           Serial.print(rssi2);
           Serial.print(")");
           break;
-          default:
+          case '3':
           ssid3  = WiFi.SSID(i); 
           rssi3  = WiFi.RSSI(i); 
           Serial.print(ssid3);
           Serial.print(" (");
           Serial.print(rssi3);
           Serial.print(")");
+          break;
+          default:
           break;
         }
       }
@@ -144,5 +146,5 @@ void loop() {
   DisconnectWIFI();
   Scanning();
   connectWIFI();
-  sendData(pos11, rssi1, rssi2, rssi3);
+  sendData(pos44, rssi1, rssi2, rssi3);
 }
