@@ -91,8 +91,8 @@ object Algorithms {
      * @return The Euclidean distance, or MIN_VALUE for error
      */
     private fun calculateEuclideanDistance(
-            rssiOnlineVector: Array<Float>,
-            rssiOfflineVector: Array<Float?>
+        rssiOnlineVector: Array<Float?>,
+        rssiOfflineVector: Array<Float?>
     ): Float {
         var finalResult = 0f
         var v1: Float
@@ -100,7 +100,7 @@ object Algorithms {
         var temp: Float
         for (i in 0 until 3) {
             try {
-                v1 = rssiOnlineVector[i]
+                v1 = rssiOnlineVector[i]!!
                 v2 = rssiOfflineVector[i]!!
             } catch (e: Exception) {
                 return Float.NEGATIVE_INFINITY
