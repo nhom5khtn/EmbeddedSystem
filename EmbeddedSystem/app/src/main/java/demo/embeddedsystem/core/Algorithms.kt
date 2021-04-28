@@ -64,7 +64,7 @@ object Algorithms {
         Log.e("KNN- List Dj", msg1)
 
         // Sort locations-distances pairs based on minimum distances
-        locDistanceResultsList.sortWith { gd1, gd2 -> if (gd1.distance > gd2.distance) 1 else if (gd1.distance === gd2.distance) 0 else -1 }
+        locDistanceResultsList.sortWith { gd1, gd2 -> if (gd1.distance > gd2.distance) 1 else if (gd1.distance == gd2.distance) 0 else -1 }
         var msg2 = "\nsorted list Dj"
         for(loc in locDistanceResultsList){
             msg2 += "\n{${loc.location},${loc.distance}}"
