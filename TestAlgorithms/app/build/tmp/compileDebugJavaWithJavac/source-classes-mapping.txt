@@ -1,0 +1,6 @@
+embeddedsystem/testalgorithms/BuildConfig.java
+ embeddedsystem.testalgorithms.BuildConfig
+embeddedsystem/testalgorithms/databinding/ActivityMainBinding.java
+ embeddedsystem.testalgorithms.databinding.ActivityMainBinding
+embeddedsystem/testalgorithms/DataBindingTriggerClass.java
+ embeddedsystem.testalgorithms.DataBindingTriggerClass

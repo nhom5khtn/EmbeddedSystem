@@ -1,11 +1,20 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+    id 'realm-android'
+    //id 'kotlin-parcelize'
+    //id 'com.google.gms.google-services'  // Google Services plugin
 }
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+
+    buildFeatures{
+        dataBinding true
+    }
 
     defaultConfig {
         applicationId "demo.embeddedsystem"
@@ -30,7 +39,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+
 }
+
+
 
 dependencies {
 
@@ -39,7 +52,20 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+
+
+    //csv
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
+
+    implementation 'com.android.volley:volley:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+
+    // Kotlin coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
 }
