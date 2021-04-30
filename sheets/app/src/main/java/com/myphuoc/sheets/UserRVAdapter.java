@@ -1,0 +1,63 @@
+package com.myphuoc.sheets;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
+public class UserRVAdapter extends RecyclerView.Adapter<UserRVAdapter.ViewHolder> {
+
+    private ArrayList<UserModal> userModalArrayList;
+    private Context context;
+
+    // creating a constructor.
+    public UserRVAdapter(ArrayList<UserModal> userModalArrayList, Context context) {
+        this.userModalArrayList = userModalArrayList;
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // inflating our layout file on below line.
+        View view = LayoutInflater.from(context).inflate(R.layout.user_rv_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull UserRVAdapter.ViewHolder holder, int position) {
+        UserModal userModal = userModalArrayList.get(position);
+
+        // on the below line we are setting data to our text view.
+        holder.AccessPointTV.setText(userModal.getAccess_Point());
+        holder.RssiTV.setText(userModal.getRSSI());
+
+    }
+
+    @Override
+    public int getItemCount() {
+        // returning the size of array list.
+        return userModalArrayList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        // creating a variable for our text view and image view.
+        private TextView AccessPointTV, RssiTV;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            // initializing our variables.
+            AccessPointTV = itemView.findViewById(R.id.tvAccessPoint);
+            RssiTV = itemView.findViewById(R.id.tvRSSI);
+        }
+    }
+}
