@@ -109,7 +109,7 @@ class ProjectDetailActivity : AppCompatActivity() {
         // creating a string variable for URL.
         //val sheetID = "1iBj3MY37lybNoOC8TRRoTQicVAY2OndAG9lwF44jwXs"
         val sheetID = "19uL6ahrprYBPcuZ8XfpY91VAb9biN3Uxm6l7k0X7sug"
-        val url = "https://spreadsheets.google.com/feeds/list/"+sheetID+"/od6/public/values?alt=json"
+        val url = "https://spreadsheets.google.com/feeds/list/$sheetID/od6/public/values?alt=json"
 
         // creating a new variable for our request queue
         val queue = Volley.newRequestQueue(this)
@@ -124,9 +124,9 @@ class ProjectDetailActivity : AppCompatActivity() {
                     val temp = currentPoint
                     val entryObj = entryArray.getJSONObject(entryArray.length()-1)
                     val timestamp = entryObj.getJSONObject("gsx\$time").getString("\$t")
-                    val rssiAP1 = entryObj.getJSONObject("gsx\$ap1").getString("\$t").toFloat()
-                    val rssiAP2 = entryObj.getJSONObject("gsx\$ap2").getString("\$t").toFloat()
-                    val rssiAP3 = entryObj.getJSONObject("gsx\$ap3").getString("\$t").toFloat()
+                    val rssiAP1 = if (entryObj.getJSONObject("gsx\$ap1").getString("\$t").isEmpty()) 0F else entryObj.getJSONObject("gsx\$ap1").getString("\$t").toFloat()
+                    val rssiAP2 = if (entryObj.getJSONObject("gsx\$ap2").getString("\$t").isEmpty()) 0F else entryObj.getJSONObject("gsx\$ap2").getString("\$t").toFloat()
+                    val rssiAP3 = if (entryObj.getJSONObject("gsx\$ap3").getString("\$t").isEmpty()) 0F else entryObj.getJSONObject("gsx\$ap3").getString("\$t").toFloat()
                     currentPoint = AccessPoint(null, rssiAP1, rssiAP2, rssiAP3, null, timestamp)
                     binding.tvCurPos.text = currentPoint.toString()
                     if (currentPoint.timestamp != temp.timestamp) {
